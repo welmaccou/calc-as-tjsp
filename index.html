@@ -21,10 +21,10 @@
 
         <main class="calculator-container">
             <section class="input-section card">
-                <h2><i class="fa-solid fa-sliders"></i> Parâmetros para cálculo</h2>
+                <h2><i class="fa-solid fa-sliders"></i> Dados para cálculo</h2>
                 
                 <div class="form-group">
-                    <label for="salario-base">Padrão de vencimento: <i class="fa-solid fa-circle-info tooltip" title="Valor base do cargo + Gratificação Judiciária"></i></label>
+                    <label for="salario-base">Padrão de vencimento: <span class="tooltip" data-tooltip="Valor base do cargo + Gratificação Judiciária"><i class="fa-solid fa-circle-info"></i></span></label>
                     <select id="salario-base">
                         <option value="10138.92" selected>8A-CE</option>
                         <option value="10178.29">8B-CE</option>
@@ -49,7 +49,7 @@
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="formacao-academica">Formação acadêmica:</label>
+                        <label for="formacao-academica">Formação acadêmica: <span class="tooltip" data-tooltip="Adicional de Qualificação pago sobre o salário base, conforme título (Especialização, Mestrado, Doutorado)."><i class="fa-solid fa-circle-info"></i></span></label>
                         <select id="formacao-academica">
                             <option value="0">Graduação</option>
                             <option value="0.075">Especialização</option>
@@ -59,14 +59,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="quinquenios">Quinquênios:</label>
+                        <label for="quinquenios">Quinquênios: <span class="tooltip" data-tooltip="Adicional de 5% sobre a base e qualificação, a cada 5 anos de efetivo exercício. A partir de 4 quinquênios adiciona-se 20% da sexta-parte."><i class="fa-solid fa-circle-info"></i></span></label>
                         <input type="number" id="quinquenios" value="0" min="0" max="10">
                     </div>
                 </div>
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="dependentes-ir">Dependentes (Imposto de Renda):</label>
+                        <label for="dependentes-ir">Dependentes (Imposto de Renda): <span class="tooltip" data-tooltip="Quantidade de dependentes legais para abatimento mensal no cálculo do Imposto de Renda."><i class="fa-solid fa-circle-info"></i></span></label>
                         <input type="number" id="dependentes-ir" value="0" min="0" max="15">
                     </div>
                 </div> 
@@ -75,21 +75,19 @@
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="dias-transporte">Dias de Auxílio Transporte:</label>
+                        <label for="dias-transporte">Dias de Auxílio Transporte: <span class="tooltip" data-tooltip="Número de dias de trabalho presencial efetivo no mês."><i class="fa-solid fa-circle-info"></i></span></label>
                         <input type="number" id="dias-transporte" value="22" min="0" max="31">
-                        <small class="help-text">R$ 14,00 por dia presencial</small>
                     </div>
 
                     <div class="form-group">
-                        <label for="dias-alimentacao">Dias de Aux. Alimentação:</label>
+                        <label for="dias-alimentacao">Dias de Aux. Alimentação: <span class="tooltip" data-tooltip="Número de dias trabalhados no mês (presencial ou teletrabalho)."><i class="fa-solid fa-circle-info"></i></span></label>
                         <input type="number" id="dias-alimentacao" value="22" min="0" max="31">
-                        <small class="help-text">R$ 80,00 por dia trabalhado</small>
                     </div>
                 </div>
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="faixa-etaria-saude">Faixa etária do Auxílio-saúde:</label>
+                        <label for="faixa-etaria-saude">Faixa etária do Auxílio-saúde: <span class="tooltip" data-tooltip="Faixa etária do servidor para cota-parte do benefício."><i class="fa-solid fa-circle-info"></i></span></label>
                         <select id="faixa-etaria-saude">
                             <option value="718">18 a 19 anos (R$ 624,00)</option>
                             <option value="746.72">20 a 29 anos (R$ 649,00)</option>
@@ -101,7 +99,7 @@
                     </div>
 
                     <div class="form-group toggle-group">
-                        <label for="saude-pcd">Servidor/dependente com Deficiência/Doença Grave?</label>
+                        <label for="saude-pcd">Servidor/dependente com Deficiência/Doença Grave? <span class="tooltip" data-tooltip="Garante um acréscimo de 50% sobre o valor base do auxílio-saúde da faixa etária."><i class="fa-solid fa-circle-info"></i></span></label>
                         <label class="switch">
                             <input type="checkbox" id="saude-pcd">
                             <span class="slider round"></span>
@@ -111,27 +109,52 @@
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="auxilio-creche">Auxílio Creche (nº filhos):</label>
+                        <label for="auxilio-creche">Auxílio Creche (nº filhos): <span class="tooltip" data-tooltip="Benefício mensal devido por filho ou dependente com até seis anos, onze meses e vinte e nove dias."><i class="fa-solid fa-circle-info"></i></span></label>
                         <input type="number" id="auxilio-creche" value="0" min="0" max="5">
-                        <small class="help-text">R$ 805,00 por filho</small>
                     </div>
 
                     <div class="form-group">
-                        <label for="auxilio-creche-pcd">Auxílio a Filho PCD (nº filhos):</label>
+                        <label for="auxilio-creche-pcd">Auxílio a Filho PCD (nº filhos): <span class="tooltip" data-tooltip="Benefício sem limite de idade com um adicional de 50% ao valor do auxílio creche normal para enteados/filhos dependentes com PCD ou doença grave."><i class="fa-solid fa-circle-info"></i></span></label>
                         <input type="number" id="auxilio-creche-pcd" value="0" min="0" max="5">
-                        <small class="help-text">R$ 1.207,50 por filho</small>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="sub-card">
+                        <h3 class="sub-card-title"><i class="fa-solid fa-umbrella-beach" style="color: var(--accent);"></i> Férias  <span class="tooltip" data-tooltip="Ao habilitar, adiciona o valor correspondente a 1/3 das verbas e realiza as deduções previstas em simulação."><i class="fa-solid fa-circle-info"></i></span></h3>
+                        <div class="form-group toggle-group" style="flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 0;">
+                            <label for="adicional-ferias" style="margin-bottom: 0; font-weight: 500;">Adicional de Férias</label>
+                            <label class="switch">
+                                <input type="checkbox" id="adicional-ferias">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="sub-card">
+                        <h3 class="sub-card-title"><i class="fa-solid fa-piggy-bank" style="color: var(--accent);"></i> 13º Salário <span class="tooltip" data-tooltip="Adiantamento da 1ª remuneração (sem descontos) ou segunda parcela completada em dezembro com os descontos integrais no valor final."><i class="fa-solid fa-circle-info" style="color: var(--text-muted); font-size: 0.9em;"></i></span></h3>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <select id="parcela-13" class="select-clean">
+                                <option value="0">Não incluir</option>
+                                <option value="1">1ª Parcela (Adiantamento)</option>
+                                <option value="2">2ª Parcela (Complementar)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
             </section>
 
             <section class="results-section">
-                <div class="card result-card primary-result">
-                    <h2>Salário Líquido Estimado</h2>
-                    <div class="net-salary" id="lbl-salario-liquido">R$ 0,00</div>
-                </div>
-
                 <div class="card details-card">
+                    <div class="results-header">
+                        <h2>Salário Líquido</h2>
+                        
+                    </div>
+                    
+                    <div class="card result-card primary-result">
+                        <div class="net-salary" id="lbl-salario-liquido">R$ 0,00</div>
+                    </div>
                     <h3>Detalhamento</h3>
                     
                     <div class="detail-group earnings">
@@ -152,28 +175,44 @@
                             <span>Sexta-parte</span>
                             <span id="lbl-sexta-parte">R$ 0,00</span>
                         </div>
+                        <div class="detail-row" id="row-ferias" style="display: none;">
+                            <span>Terço de Férias (1/3)</span>
+                            <span id="lbl-ferias">R$ 0,00</span>
+                        </div>
                         <div class="detail-row">
                             <span>Total Tributável</span>
                             <span class="subtotal" id="lbl-tributavel">R$ 0,00</span>
                         </div>
-                        <div class="detail-row highlight-row">
+                        <div class="detail-row highlight-green">
                             <span>Auxílio Alimentação</span>
-                            <span id="lbl-alimentacao">R$ 0,00</span>
+                            <span id="lbl-alimentacao" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
                         </div>
-                        <div class="detail-row highlight-row">
+                        <div class="detail-row highlight-green">
                             <span>Auxílio Transporte</span>
-                            <span id="lbl-transporte">R$ 0,00</span>
+                            <span id="lbl-transporte" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
                         </div>
-                        <div class="detail-row highlight-row">
+                        <div class="detail-row highlight-green">
                             <span>Auxílio Saúde</span>
-                            <span id="lbl-saude">R$ 0,00</span>
+                            <span id="lbl-saude" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
                         </div>
-                        <div class="detail-row highlight-row">
+                        <div class="detail-row highlight-green" id="row-creche" style="display: none;">
                             <span>Auxílio Creche</span>
-                            <span id="lbl-creche">R$ 0,00</span>
+                            <span id="lbl-creche" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
                         </div>
-                        <div class="detail-row total-row">
-                            <span>Total de Vencimentos</span>
+                        <div class="detail-row highlight-green" id="row-creche-pcd" style="display: none;">
+                            <span>Auxílio a Filho PCD</span>
+                            <span id="lbl-creche-pcd" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row" id="row-13-1" style="display: none;">
+                            <span>13º Salário (1ª Parcela)</span>
+                            <span id="lbl-13-1" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row" id="row-13-2" style="display: none;">
+                            <span>13º Salário (2ª Parcela)</span>
+                            <span id="lbl-13-2" style="font-weight: 600; color: var(--text-main);">R$ 0,00</span>
+                        </div>
+                        <div class="total-vencimentos-row">
+                            <span>Rendimento Bruto</span>
                             <span id="lbl-total-vencimentos">R$ 0,00</span>
                         </div>
                     </div>
@@ -184,13 +223,21 @@
                             <span>Contribuição SPPREV (Progressiva)</span>
                             <span id="lbl-spprev" class="negative">- R$ 0,00</span>
                         </div>
+                        <div class="detail-row" id="row-spprev-13" style="display: none;">
+                            <span>SPPREV sobre 13º Salário</span>
+                            <span id="lbl-spprev-13" class="negative">- R$ 0,00</span>
+                        </div>
                         <div class="detail-row">
                             <span>Imposto de Renda (IRPF)</span>
                             <span id="lbl-irpf" class="negative">- R$ 0,00</span>
                         </div>
-                        <div class="detail-row total-row">
-                            <span>Total de Descontos</span>
-                            <span id="lbl-total-descontos" class="negative">- R$ 0,00</span>
+                        <div class="detail-row" id="row-irpf-13" style="display: none;">
+                            <span>IRPF sobre 13º Salário</span>
+                            <span id="lbl-irpf-13" class="negative">- R$ 0,00</span>
+                        </div>
+                        <div class="total-descontos-row">
+                            <span>Total Descontos</span>
+                            <span id="lbl-total-descontos">- R$ 0,00</span>
                         </div>
                     </div>
                 </div>
@@ -199,6 +246,7 @@
         
         <footer>
             <p>Calculadora baseada em estimativas das tabelas vigentes (SPPREV progressivo e IRPF). Os valores podem diferir sutilmente da folha oficial de pagamento.</p>
+            <p>Para informar erros ou sugerir melhorias na calculadora, envie um e-mail para: <a href="mailto:wellington.as.to@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: 500;">wellington.as.to@gmail.com</a></p>
         </footer>
     </div>
     

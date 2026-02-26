@@ -8,9 +8,83 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', calculateSalary);
     });
 
+    // Initialize custom selects
+    initCustomSelects();
+
     // Initial calculation
     calculateSalary();
 });
+
+// Custom Select Implementation
+function initCustomSelects() {
+    const selects = document.querySelectorAll('select:not(.custom-select)');
+    
+    selects.forEach(select => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'custom-select-wrapper';
+        
+        const customSelect = document.createElement('div');
+        customSelect.className = 'custom-select';
+        
+        const trigger = document.createElement('div');
+        trigger.className = 'custom-select-trigger';
+        
+        const selectedOptionText = select.options[select.selectedIndex].text;
+        trigger.innerHTML = `<span>${selectedOptionText}</span><div class="arrow"></div>`;
+        
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'custom-options';
+        
+        Array.from(select.options).forEach((option, index) => {
+            const customOption = document.createElement('span');
+            customOption.className = 'custom-option' + (index === select.selectedIndex ? ' selected' : '');
+            customOption.textContent = option.textContent;
+            customOption.setAttribute('data-value', option.value);
+            
+            customOption.addEventListener('click', () => {
+                // Update native select
+                select.value = option.value;
+                
+                // Update UI of custom select
+                trigger.querySelector('span').textContent = option.textContent;
+                optionsContainer.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                customOption.classList.add('selected');
+                
+                // Trigger change event on native select for calculation
+                select.dispatchEvent(new Event('change'));
+                
+                // Close dropdown
+                wrapper.classList.remove('open');
+            });
+            
+            optionsContainer.appendChild(customOption);
+        });
+        
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Close other open selects
+            document.querySelectorAll('.custom-select-wrapper').forEach(openWrapper => {
+                if (openWrapper !== wrapper) openWrapper.classList.remove('open');
+            });
+            wrapper.classList.toggle('open');
+        });
+        
+        customSelect.appendChild(trigger);
+        customSelect.appendChild(optionsContainer);
+        wrapper.appendChild(customSelect);
+        
+        // Hide native select and insert custom one
+        select.classList.add('hidden-select');
+        select.parentNode.insertBefore(wrapper, select.nextSibling);
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+            wrapper.classList.remove('open');
+        });
+    });
+}
 
 // Format numbers to BRL currency
 const formatCurrency = (value) => {
@@ -33,12 +107,15 @@ function calculateSalary() {
     const temSaudePcd = document.getElementById('saude-pcd').checked;
     
     // Check if SPPREV limit applies (Now hardcoded to true per user request)
-    const temTetoSpprev = true;
+    // const temTetoSpprev = true; // Removed as it's handled within the spprev calculation function
     
     const crecheNormal = parseInt(document.getElementById('auxilio-creche').value) || 0;
     const crechePcd = parseInt(document.getElementById('auxilio-creche-pcd').value) || 0;
 
     // 2. Calculate Earnings (Proventos)
+    const temFerias = document.getElementById('adicional-ferias').checked;
+    const tipo13 = parseInt(document.getElementById('parcela-13').value) || 0;
+
     // Adicional de Qualificação (Formação Acadêmica)
     const valorQualificacao = salarioBase * taxaFormacao;
 
@@ -55,8 +132,15 @@ function calculateSalary() {
     }
 
     const adicionaisTemporais = valorQuinquenios + valorSextaParte + valorQualificacao;
-    const totalTributavel = salarioBase + adicionaisTemporais;
+    const totalTributavelNormal = salarioBase + adicionaisTemporais;
     
+    // Férias (Adicional de 1/3)
+    let valorFerias = 0;
+    if (temFerias) {
+        valorFerias = totalTributavelNormal / 3;
+    }
+    const totalTributavelComFerias = totalTributavelNormal + valorFerias;
+
     // Indenizações
     const valorAlimentacao = diasAlimentacao * 80.00;
     const valorTransporte = diasTransporte * 14.00;
@@ -66,23 +150,122 @@ function calculateSalary() {
         auxSaudeFinal = baseSaude * 1.5; // Acréscimo de 50%
     }
 
-    const valorCreche = (crecheNormal * 805.00) + (crechePcd * 1207.50);
+    const valorCrecheNormal = crecheNormal * 805.00;
+    const valorCrechePcd = crechePcd * 1207.50;
 
-    const totalIndenizacoes = valorAlimentacao + valorTransporte + auxSaudeFinal + valorCreche;
-    const totalBrutoGeral = totalTributavel + totalIndenizacoes;
+    const totalIndenizacoes = valorAlimentacao + valorTransporte + auxSaudeFinal + valorCrecheNormal + valorCrechePcd;
+    
+    // 13º Salário
+    let valor13_1 = 0;
+    let valor13_2 = 0;
+    let descontoSpprev13 = 0;
+    let descontoIrpf13 = 0;
+
+    const base13 = totalTributavelNormal; 
+
+    if (tipo13 === 1) {
+        valor13_1 = base13 * 0.5;
+    } else if (tipo13 === 2) {
+        valor13_2 = base13 * 0.5; 
+        descontoSpprev13 = calcularDescontoSpprev(base13);
+        descontoIrpf13 = calcularDescontoIrpf(base13, descontoSpprev13, dependentesIr);
+    }
+
+    const totalBrutoGeral = totalTributavelComFerias + totalIndenizacoes + valor13_1 + valor13_2;
 
     // 3. Calculate Deductions (Descontos)
+    const descontoSpprev = calcularDescontoSpprev(totalTributavelComFerias);
+    const descontoIrpf = calcularDescontoIrpf(totalTributavelComFerias, descontoSpprev, dependentesIr);
+
+    const totalDescontos = descontoSpprev + descontoIrpf + descontoSpprev13 + descontoIrpf13;
+
+    // 4. Calculate Net Salary
+    const salarioLiquido = totalBrutoGeral - totalDescontos;
+
+    // 5. Update DOM
+    document.getElementById('lbl-bruto').textContent = formatCurrency(salarioBase);
+    document.getElementById('lbl-qualificacao').textContent = formatCurrency(valorQualificacao);
+    document.getElementById('lbl-quinquenios').textContent = formatCurrency(valorQuinquenios);
+    document.getElementById('lbl-sexta-parte').textContent = formatCurrency(valorSextaParte);
     
-    // SPPREV - Contribuição Previdenciária SP (Progressiva)
+    const rowFerias = document.getElementById('row-ferias');
+    if (temFerias) {
+        rowFerias.style.display = 'flex';
+        document.getElementById('lbl-ferias').textContent = formatCurrency(valorFerias);
+    } else {
+        rowFerias.style.display = 'none';
+    }
+
+    document.getElementById('lbl-tributavel').textContent = formatCurrency(totalTributavelComFerias);
+
+    document.getElementById('lbl-alimentacao').textContent = formatCurrency(valorAlimentacao);
+    document.getElementById('lbl-transporte').textContent = formatCurrency(valorTransporte);
+    document.getElementById('lbl-saude').textContent = formatCurrency(auxSaudeFinal);
+    const rowCreche = document.getElementById('row-creche');
+    if (valorCrecheNormal > 0) {
+        rowCreche.style.display = 'flex';
+        document.getElementById('lbl-creche').textContent = formatCurrency(valorCrecheNormal);
+    } else {
+        rowCreche.style.display = 'none';
+    }
+
+    const rowCrechePcd = document.getElementById('row-creche-pcd');
+    if (valorCrechePcd > 0) {
+        rowCrechePcd.style.display = 'flex';
+        document.getElementById('lbl-creche-pcd').textContent = formatCurrency(valorCrechePcd);
+    } else {
+        rowCrechePcd.style.display = 'none';
+    }
+    
+    const row13_1 = document.getElementById('row-13-1');
+    if (tipo13 === 1) {
+        row13_1.style.display = 'flex';
+        document.getElementById('lbl-13-1').textContent = formatCurrency(valor13_1);
+    } else {
+        row13_1.style.display = 'none';
+    }
+
+    const row13_2 = document.getElementById('row-13-2');
+    if (tipo13 === 2) {
+        row13_2.style.display = 'flex';
+        document.getElementById('lbl-13-2').textContent = formatCurrency(valor13_2);
+    } else {
+        row13_2.style.display = 'none';
+    }
+    
+    document.getElementById('lbl-total-vencimentos').textContent = formatCurrency(totalBrutoGeral);
+
+    document.getElementById('lbl-spprev').textContent = `- ${formatCurrency(descontoSpprev)}`;
+    document.getElementById('lbl-irpf').textContent = `- ${formatCurrency(descontoIrpf)}`;
+    
+    const rowSpprev13 = document.getElementById('row-spprev-13');
+    const rowIrpf13 = document.getElementById('row-irpf-13');
+    if (tipo13 === 2) {
+        rowSpprev13.style.display = 'flex';
+        rowIrpf13.style.display = 'flex';
+        document.getElementById('lbl-spprev-13').textContent = `- ${formatCurrency(descontoSpprev13)}`;
+        document.getElementById('lbl-irpf-13').textContent = `- ${formatCurrency(descontoIrpf13)}`;
+    } else {
+        rowSpprev13.style.display = 'none';
+        rowIrpf13.style.display = 'none';
+    }
+
+    document.getElementById('lbl-total-descontos').textContent = `- ${formatCurrency(totalDescontos)}`;
+    document.getElementById('lbl-salario-liquido').textContent = formatCurrency(salarioLiquido);
+}
+
+function calcularDescontoSpprev(baseSpprevInput) {
     let descontoSpprev = 0;
-    let baseSpprev = totalTributavel;
+    let baseSpprev = baseSpprevInput; // Use a local copy for modification
 
     const spprevFaixa1 = 1518.00;
     const spprevFaixa2 = 4022.46;
     const spprevFaixa3 = 8157.41;
 
     // Aplica o teto previdenciário caso selecionado (R$ 8.157,41)
-    if (temTetoSpprev && baseSpprev > spprevFaixa3) {
+    // The original code had `if (temTetoSpprev && baseSpprev > spprevFaixa3)`
+    // Since `temTetoSpprev` is now hardcoded to true, we can simplify this.
+    if (baseSpprev > spprevFaixa3) {
         baseSpprev = spprevFaixa3;
     }
 
@@ -102,8 +285,10 @@ function calculateSalary() {
         let fatia4 = baseSpprev - spprevFaixa3;
         descontoSpprev += fatia4 * 0.16;
     }
+    return descontoSpprev;
+}
 
-    // Imposto de Renda (IRPF)
+function calcularDescontoIrpf(totalTributavel, descontoSpprev, dependentesIr) {
     const deducaoDependentes = dependentesIr * 189.59;
     
     let baseCalculoIrpf = totalTributavel - descontoSpprev - deducaoDependentes;
@@ -136,29 +321,5 @@ function calculateSalary() {
     }
 
     if (descontoIrpf < 0) descontoIrpf = 0;
-
-    const totalDescontos = descontoSpprev + descontoIrpf;
-
-    // 4. Calculate Net Salary
-    const salarioLiquido = totalBrutoGeral - totalDescontos;
-
-    // 5. Update DOM
-    document.getElementById('lbl-bruto').textContent = formatCurrency(salarioBase);
-    document.getElementById('lbl-qualificacao').textContent = formatCurrency(valorQualificacao);
-    document.getElementById('lbl-quinquenios').textContent = formatCurrency(valorQuinquenios);
-    document.getElementById('lbl-sexta-parte').textContent = formatCurrency(valorSextaParte);
-    document.getElementById('lbl-tributavel').textContent = formatCurrency(totalTributavel);
-
-    document.getElementById('lbl-alimentacao').textContent = formatCurrency(valorAlimentacao);
-    document.getElementById('lbl-transporte').textContent = formatCurrency(valorTransporte);
-    document.getElementById('lbl-saude').textContent = formatCurrency(auxSaudeFinal);
-    document.getElementById('lbl-creche').textContent = formatCurrency(valorCreche);
-    
-    document.getElementById('lbl-total-vencimentos').textContent = formatCurrency(totalBrutoGeral);
-
-    document.getElementById('lbl-spprev').textContent = `- ${formatCurrency(descontoSpprev)}`;
-    document.getElementById('lbl-irpf').textContent = `- ${formatCurrency(descontoIrpf)}`;
-    document.getElementById('lbl-total-descontos').textContent = `- ${formatCurrency(totalDescontos)}`;
-
-    document.getElementById('lbl-salario-liquido').textContent = formatCurrency(salarioLiquido);
+    return descontoIrpf;
 }
