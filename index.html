@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Salário - Assistente Social TJSP</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/scale-balanced.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <header class="header">
+            <div class="header-content">
+                <i class="fa-solid fa-scale-balanced logo-icon"></i>
+                <h1>TJSP <span>Calculadora de Salário</span></h1>
+                <p>Assistente Social Judiciário</p>
+            </div>
+        </header>
+
+        <main class="calculator-container">
+            <section class="input-section card">
+                <h2><i class="fa-solid fa-sliders"></i> Parâmetros para cálculo</h2>
+                
+                <div class="form-group">
+                    <label for="salario-base">Padrão de vencimento: <i class="fa-solid fa-circle-info tooltip" title="Valor base do cargo + Gratificação Judiciária"></i></label>
+                    <select id="salario-base">
+                        <option value="10138.92" selected>8A-CE</option>
+                        <option value="10178.29">8B-CE</option>
+                        <option value="10218.24">8C-CE</option>
+                        <option value="10258.80">8D-CE</option>
+                        <option value="10299.97">8E-CE</option>
+                        <option value="10341.75">8F-CE</option>
+                        <option value="10426.57">8G-CE</option>
+                        <option value="10470.25">8H-CE</option>
+                        <option value="10514.58">8I-CE</option>
+                        <option value="10559.59">8J-CE</option>
+                        <option value="10605.26">8K-CE</option>
+                        <option value="10651.62">8L-CE</option>
+                        <option value="10745.74">8M-CE</option>
+                        <option value="10794.21">8N-CE</option>
+                        <option value="10843.40">8O-CE</option>
+                        <option value="10893.34">8P-CE</option>
+                        <option value="10944.02">8Q-CE</option>
+                        <option value="10995.46">8R-CE</option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="formacao-academica">Formação acadêmica:</label>
+                        <select id="formacao-academica">
+                            <option value="0">Graduação</option>
+                            <option value="0.075">Especialização</option>
+                            <option value="0.10">Mestrado</option>
+                            <option value="0.125">Doutorado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quinquenios">Quinquênios:</label>
+                        <input type="number" id="quinquenios" value="0" min="0" max="10">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="dependentes-ir">Dependentes (Imposto de Renda):</label>
+                        <input type="number" id="dependentes-ir" value="0" min="0" max="15">
+                    </div>
+                </div>
+
+                <div class="section-divider">Auxílios e Indenizações</div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="dias-transporte">Dias de Auxílio Transporte:</label>
+                        <input type="number" id="dias-transporte" value="22" min="0" max="31">
+                        <small class="help-text">R$ 14,00 por dia presencial</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dias-alimentacao">Dias de Aux. Alimentação:</label>
+                        <input type="number" id="dias-alimentacao" value="22" min="0" max="31">
+                        <small class="help-text">R$ 80,00 por dia trabalhado</small>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="faixa-etaria-saude">Faixa etária do Auxílio-saúde:</label>
+                        <select id="faixa-etaria-saude">
+                            <option value="718">18 a 19 anos (R$ 624,00)</option>
+                            <option value="746.72">20 a 29 anos (R$ 649,00)</option>
+                            <option value="761.08">30 a 39 anos (R$ 662,00)</option>
+                            <option value="789.80">40 a 49 anos (R$ 687,00)</option>
+                            <option value="1199.06">50 a 59 anos (R$ 1.043,00)</option>
+                            <option value="1227.78">60 anos ou mais (R$ 1.068,00)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group toggle-group">
+                        <label for="saude-pcd">Servidor/dependente com Deficiência/Doença Grave?</label>
+                        <label class="switch">
+                            <input type="checkbox" id="saude-pcd">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="auxilio-creche">Auxílio Creche (nº filhos):</label>
+                        <input type="number" id="auxilio-creche" value="0" min="0" max="5">
+                        <small class="help-text">R$ 805,00 por filho</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auxilio-creche-pcd">Auxílio a Filho PCD (nº filhos):</label>
+                        <input type="number" id="auxilio-creche-pcd" value="0" min="0" max="5">
+                        <small class="help-text">R$ 1.207,50 por filho</small>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="results-section">
+                <div class="card result-card primary-result">
+                    <h2>Salário Líquido Estimado</h2>
+                    <div class="net-salary" id="lbl-salario-liquido">R$ 0,00</div>
+                </div>
+
+                <div class="card details-card">
+                    <h3>Detalhamento</h3>
+                    
+                    <div class="detail-group earnings">
+                        <h4><i class="fa-solid fa-arrow-trend-up"></i> Proventos (Ganhos)</h4>
+                        <div class="detail-row">
+                            <span>Vencimento Bruto</span>
+                            <span id="lbl-bruto">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Adicional de Qualificação</span>
+                            <span id="lbl-qualificacao">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Quinquênios</span>
+                            <span id="lbl-quinquenios">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Sexta-parte</span>
+                            <span id="lbl-sexta-parte">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Total Tributável</span>
+                            <span class="subtotal" id="lbl-tributavel">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row highlight-row">
+                            <span>Auxílio Alimentação</span>
+                            <span id="lbl-alimentacao">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row highlight-row">
+                            <span>Auxílio Transporte</span>
+                            <span id="lbl-transporte">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row highlight-row">
+                            <span>Auxílio Saúde</span>
+                            <span id="lbl-saude">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row highlight-row">
+                            <span>Auxílio Creche</span>
+                            <span id="lbl-creche">R$ 0,00</span>
+                        </div>
+                        <div class="detail-row total-row">
+                            <span>Total de Vencimentos</span>
+                            <span id="lbl-total-vencimentos">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-group deductions">
+                        <h4><i class="fa-solid fa-arrow-trend-down"></i> Descontos</h4>
+                        <div class="detail-row">
+                            <span>Contribuição SPPREV (Progressiva)</span>
+                            <span id="lbl-spprev" class="negative">- R$ 0,00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Imposto de Renda (IRPF)</span>
+                            <span id="lbl-irpf" class="negative">- R$ 0,00</span>
+                        </div>
+                        <div class="detail-row total-row">
+                            <span>Total de Descontos</span>
+                            <span id="lbl-total-descontos" class="negative">- R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>Calculadora baseada em estimativas das tabelas vigentes (SPPREV progressivo e IRPF). Os valores podem diferir sutilmente da folha oficial de pagamento.</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
