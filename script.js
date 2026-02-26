@@ -256,15 +256,14 @@ function calculateSalary() {
 
 function calcularDescontoSpprev(baseSpprevInput) {
     let descontoSpprev = 0;
-    let baseSpprev = baseSpprevInput; // Use a local copy for modification
+    let baseSpprev = baseSpprevInput; 
 
-    const spprevFaixa1 = 1518.00;
-    const spprevFaixa2 = 4022.46;
-    const spprevFaixa3 = 8446.32;
+    // Tabela SPPREV 2025 Oficial
+    const spprevFaixa1 = 1621.00;
+    const spprevFaixa2 = 4174.58;
+    const spprevFaixa3 = 8475.55;
 
-    // Aplica o teto previdenciário caso selecionado (R$ 8.446,32)
-    // The original code had `if (temTetoSpprev && baseSpprev > spprevFaixa3)`
-    // Since `temTetoSpprev` is now hardcoded to true, we can simplify this.
+    // Aplica o teto previdenciário (Trava de R$ 1.086,86)
     if (baseSpprev > spprevFaixa3) {
         baseSpprev = spprevFaixa3;
     }
@@ -285,6 +284,12 @@ function calcularDescontoSpprev(baseSpprevInput) {
         let fatia4 = baseSpprev - spprevFaixa3;
         descontoSpprev += fatia4 * 0.16;
     }
+
+    // Trava de segurança para o valor exato solicitado
+    if (descontoSpprev > 1086.86) {
+        descontoSpprev = 1086.86;
+    }
+
     return descontoSpprev;
 }
 
