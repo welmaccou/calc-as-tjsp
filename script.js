@@ -260,9 +260,9 @@ function calcularDescontoSpprev(baseSpprevInput) {
 
     const spprevFaixa1 = 1518.00;
     const spprevFaixa2 = 4022.46;
-    const spprevFaixa3 = 8157.41;
+    const spprevFaixa3 = 8446.32;
 
-    // Aplica o teto previdenciário caso selecionado (R$ 8.157,41)
+    // Aplica o teto previdenciário caso selecionado (R$ 8.446,32)
     // The original code had `if (temTetoSpprev && baseSpprev > spprevFaixa3)`
     // Since `temTetoSpprev` is now hardcoded to true, we can simplify this.
     if (baseSpprev > spprevFaixa3) {
